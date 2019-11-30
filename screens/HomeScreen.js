@@ -19,36 +19,59 @@ const socket = useRef(null);
   useEffect(() => {
     socket.current = io("http://192.168.0.10:3001");
     socket.current.on("message", message => {
-    setRecvMessages(prevState => [...prevState, message]);
+      const testMessage =       {
+        _id: 3,
+        text: 'Hello developer!',
+        createdAt: new Date(),
+        user: {
+          _id: 1,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        }
+      }
+      testMessage.text = message;
+    setRecvMessages(prevState => GiftedChat.append(prevState, testMessage));
     });
 
     //using bootstrap suggested message setup
     setRecvMessages([
       {
         _id: 1,
-        text: 'Hello developer',
+        text: 'Hello developer!',
+        createdAt: new Date(),
+        user: {
+          _id: 1,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+      {
+        _id: 2,
+        text: 'Hello from myself!',
         createdAt: new Date(),
         user: {
           _id: 2,
           name: 'React Native',
           avatar: 'https://placeimg.com/140/140/any',
         },
-      },
+      }
     ]);
   }, []);
 
   // function which sends the message to send to the backend, then clears out the text view box
-  const sendMessage = () => {
-    socket.current.emit("message", messageToSend);
-    setMessageToSend("");
+  const sendMessage = messages => {
+    console.log(messages)
+    socket.current.emit("message", messages[0].text);
   };
 
   return (
     <View style={{ flex: 1}}>
     {/* // Gifted chat bootstrap UI message view */}
       <GiftedChat
+        // shows the recvMessages state array as the messages
         messages={recvMessages}
-        // onSend={messages => this.onSend(messages)}
+        // sends a preditermined array from the repo which also contains the text from the chatbox
+        onSend={messages => sendMessage(messages)}
         user={{
           _id: 1,
         }}
