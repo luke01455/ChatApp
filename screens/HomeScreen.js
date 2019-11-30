@@ -19,43 +19,9 @@ const socket = useRef(null);
   useEffect(() => {
     socket.current = io("http://192.168.0.10:3001");
     socket.current.on("message", message => {
-      const testMessage =       {
-        _id: 3,
-        text: 'Hello developer!',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        }
-      }
-      testMessage.text = message;
-    setRecvMessages(prevState => GiftedChat.append(prevState, testMessage));
+      // on component load, sets the messages to the current state, plus the message if it exists
+    setRecvMessages(prevState => GiftedChat.append(prevState, message));
     });
-
-    //using bootstrap suggested message setup
-    setRecvMessages([
-      {
-        _id: 1,
-        text: 'Hello developer!',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 2,
-        text: 'Hello from myself!',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      }
-    ]);
   }, []);
 
   // function which sends the message to send to the backend, then clears out the text view box
@@ -83,12 +49,3 @@ const socket = useRef(null);
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
